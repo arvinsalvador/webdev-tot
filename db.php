@@ -6,14 +6,19 @@
     protected $query_closed = TRUE;
 	  public $query_count = 0;
 
-    private $dbhost = "localhost";
-    private $dbuser = "root";
-    private $dbpass = ""; 
-    private $dbname = "martian_db";
+    private $dbhost = '';
+    private $dbuser = '';
+    private $dbpass = ''; 
+    private $dbname = '';
     private $chrset = "utf8";
-    
 
     public function __construct() {
+      $cDBUrl =  parse_url(getenv("CLEARDB_DATABASE_URL"));
+      $this->dbhost = $cDBUrl['host'];
+      $this->dbuser = $cDBUrl['user'];
+      $this->dbpass = $cDBUrl['pass']; 
+      $this->dbname = substr($cDBUrl['path'],1);
+      
       $this->connection = new mysqli($this->dbhost, $this->dbuser, $this->dbpass, $this->dbname);
       if ($this->connection->connect_error) {
         $this->error('Failed to connect to MySQL - ' . $this->connection->connect_error);
